@@ -30,8 +30,8 @@ class FaceMeshDetector():
                     ih,iw,ic = img.shape
                     x,y = int(lm.x*iw),int(lm.y*ih)
                     if(draw):
-                        cv2.putText(img,str(i),(x,y),cv2.FONT_HERSHEY_PLAIN,0.5,(0,255,0),1)
+                        cv2.putText(img,str(i),(x,y),cv2.FONT_HERSHEY_PLAIN,0.8,(0,255,0),1)
                     #print(i,x,y)
-                    face.append([x,y])
+                    face.append([x,y,lm.z])
                 faces.append(face)
         return img,faces
