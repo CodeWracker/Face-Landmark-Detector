@@ -25,14 +25,13 @@ class FaceMeshDetector():
         faces = []
         if results.multi_face_landmarks:
             for faceLms in results.multi_face_landmarks:
-                if(draw):
-                    self. mpDraw.draw_landmarks(img,faceLms,self.mpFaceMesh.FACE_CONNECTIONS,
-                    self.drawSpec,self.drawSpec)
                 face = []
                 for i,lm in enumerate(faceLms.landmark):
                     ih,iw,ic = img.shape
                     x,y = int(lm.x*iw),int(lm.y*ih)
+                    if(draw):
+                        cv2.putText(img,str(i),(x,y),cv2.FONT_HERSHEY_PLAIN,0.5,(0,255,0),1)
                     #print(i,x,y)
-                    face.append([i,x,y])
+                    face.append([x,y])
                 faces.append(face)
         return img,faces

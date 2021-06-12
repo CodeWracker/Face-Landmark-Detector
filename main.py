@@ -5,17 +5,22 @@ from pprint import pprint
 
 def main():
     cap = cv2.VideoCapture("./videos/eu.mp4")
+    vfps = (cap.get(cv2.CAP_PROP_FPS))
     detector = FaceMeshDetector(maxNumFaces=1,minDetectionConfidence=0.9    )
     pTime = 0
     FPS_MED = 0
     FPS = 0
     count_med = 0
     while True:
-        try:
-            success, img = cap.read()
-
+        success, img = cap.read()
+        if(success):
+            #print(success)
             img,faces = detector.findFaceMesh(img)
+            #print(len(faces))
+            
             cTime = time.time()
+            while 1/(cTime - pTime) > vfps:
+                cTime = time.time()
             fps = 1/(cTime - pTime)
             pTime = cTime
             FPS+=fps
@@ -28,7 +33,7 @@ def main():
             3,(0,0,0),3)
             cv2.imshow("Image",img)
             cv2.waitKey(1)
-        except cv2.error:
+        else:
             print("End of Video")
             break
 
