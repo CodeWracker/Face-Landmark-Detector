@@ -1,44 +1,40 @@
 from FaceMeshModule import FaceMeshDetector
 import cv2
-import time
-from pprint import pprint
+import os
+from tqdm import tqdm
 
-def main():
-    cap = cv2.VideoCapture("./videos/0001-220621-1.mp4")
+def detect_face_on_video(path):
+    cap = cv2.VideoCapture( str(path))
     vfps = (cap.get(cv2.CAP_PROP_FPS))
-    detector = FaceMeshDetector(maxNumFaces=2,minDetectionConfidence=0.9    )
-    pTime = 0
-    FPS_MED = 0
-    FPS = 0
-    count_med = 0
+    
+    detector = FaceMeshDetector(maxNumFaces=2,minDetectionConfidence=0.9)
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+
+    name = path.split('/')
+    name = name[len(name)-1].split('.')
+    name = name[0]
+    name =  './videos/lms/'+name + '.avi'
+    (h,w) = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    out = cv2.VideoWriter(name, fourcc,int(vfps),(h,w))
+
+
     while True:
         success, img = cap.read()
         if(success):
             #print(success)
-            img,faces = detector.findFaceMesh(img,True)
-            #print(len(faces))
-            #for face in faces:
-                #print(face[4][2],30*(-face[4][2]),-500*(-face[4][2]))
-                #cv2.putText(img,"Nose",(int(face[4][0]-500*(-face[4][2])),face[4][1]),cv2.FONT_HERSHEY_PLAIN,
-            #30*(-face[4][2]),(0,255,0),2)
-            cTime = time.time()
-            while 1/(cTime - pTime) > vfps:
-                cTime = time.time()
-            fps = 1/(cTime - pTime)
-            pTime = cTime
-            FPS+=fps
-            count_med+=1
-            if(count_med == 10):
-                FPS_MED = FPS/10
-                FPS = 0
-                count_med = 0
-            cv2.putText(img,f'FPS: {int(FPS_MED)}',(20,70),cv2.FONT_HERSHEY_PLAIN,
-            3,(0,0,0),3)
-            cv2.imshow("Image",img)
-            cv2.waitKey(1)
+            img2,faces = detector.findFaceMesh(img,True)
+            
+            
+            img2 = cv2.resize(img2, (h,w))
+            
+            out.write(img2)
         else:
             print("End of Video")
             break
+    cap.release()
+    cv2.destroyAllWindows()
+    out.release()
 
 if __name__ == "__main__":
-    main()
+    for video in tqdm(os.listdir('./videos/raw')):
+        detect_face_on_video("./videos/raw/"+video)
