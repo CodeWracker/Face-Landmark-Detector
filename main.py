@@ -4,9 +4,9 @@ import time
 from pprint import pprint
 
 def main():
-    cap = cv2.VideoCapture("./videos/eu3.mp4")
+    cap = cv2.VideoCapture("./videos/0001-220621-1.mp4")
     vfps = (cap.get(cv2.CAP_PROP_FPS))
-    detector = FaceMeshDetector(maxNumFaces=1,minDetectionConfidence=0.9    )
+    detector = FaceMeshDetector(maxNumFaces=2,minDetectionConfidence=0.9    )
     pTime = 0
     FPS_MED = 0
     FPS = 0
@@ -15,12 +15,12 @@ def main():
         success, img = cap.read()
         if(success):
             #print(success)
-            img,faces = detector.findFaceMesh(img,False)
+            img,faces = detector.findFaceMesh(img,True)
             #print(len(faces))
-            for face in faces:
-                print(face[4][2],30*(-face[4][2]),-500*(-face[4][2]))
-                cv2.putText(img,"NOSE",(int(face[4][0]-500*(-face[4][2])),face[4][1]),cv2.FONT_HERSHEY_PLAIN,
-            30*(-face[4][2]),(0,255,0),2)
+            #for face in faces:
+                #print(face[4][2],30*(-face[4][2]),-500*(-face[4][2]))
+                #cv2.putText(img,"Nose",(int(face[4][0]-500*(-face[4][2])),face[4][1]),cv2.FONT_HERSHEY_PLAIN,
+            #30*(-face[4][2]),(0,255,0),2)
             cTime = time.time()
             while 1/(cTime - pTime) > vfps:
                 cTime = time.time()

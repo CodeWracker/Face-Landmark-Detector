@@ -26,6 +26,7 @@ class FaceMeshDetector():
         if results.multi_face_landmarks:
             for faceLms in results.multi_face_landmarks:
                 face = []
+                #print(faceLms)
                 for i,lm in enumerate(faceLms.landmark):
                     ih,iw,ic = img.shape
                     x,y = int(lm.x*iw),int(lm.y*ih)
